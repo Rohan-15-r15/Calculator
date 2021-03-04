@@ -1,0 +1,74 @@
+
+using System;
+using System.Collections;
+using UnityEngine;
+
+public class CalculatorInput : MonoBehaviour
+{
+    public string _str = "5+2  +1 0+1 0    +1 0-3 7";
+    public int _total;
+    private ArrayList _chrArray = new ArrayList();
+    private string _constring = "";
+    private ArrayList _SignSeparateArray = new ArrayList();
+    private string[] _strArray;
+
+    [ContextMenu("Calculate")]
+    private void CaLculate()
+    {
+        _strArray = new string[_str.Length];
+        _chrArray = new ArrayList();
+        _SignSeparateArray = new ArrayList();
+        _constring = "";
+        _total = 0;
+
+        for (var i = 0; i < _str.Length; i++) _strArray[i] = Convert.ToString(_str[i]);
+
+        for (var i = 0; i < _strArray.Length; i++)
+            if (_strArray[i] != " ")
+                _chrArray.Add(_strArray[i]);
+
+
+        for (var i = 0; i < _chrArray.Count; i++)
+            // print(_chrArray[i]);
+
+            if ((string) _chrArray[i] == "+"||(string) _chrArray[i] == "-")
+            {
+                _constring = "";
+                _SignSeparateArray.Add((string) _chrArray[i]);
+            }
+            else
+            {
+                _constring += _chrArray[i];
+
+                for (var j = i + 1; j < _chrArray.Count; j++)
+                    if ((string) _chrArray[j] != "+")
+                    {
+                        _constring += _chrArray[j];
+                        i = j;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                _SignSeparateArray.Add(_constring);
+            }
+
+        foreach (var VARIABLE in _SignSeparateArray)
+            if ((string) VARIABLE != "+")
+                AddCalculation((string) VARIABLE);
+            else if ((string) VARIABLE != "-") 
+                SubtractCalculation((string) VARIABLE);
+    }
+
+
+    public void AddCalculation(string VARIABLE)
+    {
+        _total += Convert.ToInt32(VARIABLE);
+    }
+
+    public void SubtractCalculation(string VARIABLE)
+    {
+        _total -= Convert.ToInt32(VARIABLE);
+    }
+}
